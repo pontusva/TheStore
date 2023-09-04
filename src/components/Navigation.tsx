@@ -38,7 +38,9 @@ const Navigation = () => {
   }, [screenSize])
 
   return desktopNavigationBreakPoint ? (
-    <MobileNavigation menu={menu} />
+    <div>
+      <MobileNavigation menu={menu} />
+    </div>
   ) : (
     <DesktopNavigation menu={menu} />
   )

@@ -6,7 +6,7 @@ import {
   useUser
 } from '@clerk/clerk-react'
 import BurgerMenu from '../svgComponents/BurgerMenu'
-
+import ShoppingCart from '../ShoppingCart'
 type NavigationProps = {
   menu: string[]
 }
@@ -21,14 +21,17 @@ const MobileNavigation = ({ menu }: NavigationProps) => {
   return (
     <div className="flex flex-col transition-all">
       <div className="relative flex items-center justify-end pt-4 pr-6 z-20">
-        <h1
-          className={
-            isMenuOpen
-              ? ' mr-auto delay-150 text-[#FAF9F9] pl-6 text-5xl font-light'
-              : ' mr-auto  pl-6 text-5xl font-light text-[#1C1C1E]'
-          }>
-          the store
-        </h1>
+        <div className="flex mr-auto">
+          <h1
+            className={
+              isMenuOpen
+                ? ' mr-auto delay-150 text-[#FAF9F9] pl-6 text-5xl font-light'
+                : ' mr-auto  pl-6 text-5xl font-light text-[#1C1C1E]'
+            }>
+            the store
+          </h1>
+          <ShoppingCart itemIndicator />
+        </div>
 
         <div className="flex flex-col justify-center items-center">
           <BurgerMenu

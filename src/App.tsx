@@ -16,6 +16,7 @@ function App() {
       <ClerkProvider publishableKey={clerkPubKey}>
         <div className="bg-[#FAF9F9] h-screen">
           <Navigation />
+
           <Outlet />
         </div>
       </ClerkProvider>
