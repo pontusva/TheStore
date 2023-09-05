@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useBearStore } from '../../../store'
 import ShoppingCart from '../../../components/ShoppingCart'
+import { Button } from '@/components/ui/button'
 
 type Data = {
   id: number
@@ -33,7 +34,7 @@ const SpecificCategory = () => {
     return setShoppingItem(
       shoppingItem.filter(
         (items, index) =>
-          shoppingItem.indexOf(item) === index
+          shoppingItem.indexOf(item) !== index
       )
     )
     // return arr.filter((item,
@@ -41,6 +42,16 @@ const SpecificCategory = () => {
     // setShoppingItem(
     //   shoppingItem?.splice(0, shoppingItem.indexOf(item))
     // )
+    // return
+  }
+
+  const disabled = (item: number) => {
+    return (
+      shoppingItem.some((i) => {
+        return i !== item
+      }) || shoppingItem.length === 0
+    )
+
     // return
   }
 
@@ -79,24 +90,27 @@ const SpecificCategory = () => {
                     shoppingItem?.length as number
                   }
                   shoppingItem={shoppingItem}>
-                  <div className="flex flex-col">
-                    <button
+                  <div className="flex  flex-col">
+                    <Button
                       onClick={() => {
                         addToCart(item.id)
                         increaseBears(1)
                       }}>
                       Add to cart
-                    </button>
-                    <button
-                      disabled={shoppingItem?.length === 0}
+                    </Button>
+                    <Button
+                      disabled={disabled(item.id)}
                       onClick={() => {
-                        shoppingItem.find((i) => {
-                          i === item.id && increaseBears(-1)
-                        })
                         removeFromCart(item.id)
+                        shoppingItem.find((i) => {
+                          return (
+                            i === item.id &&
+                            increaseBears(-1)
+                          )
+                        })
                       }}>
                       remove from cart
-                    </button>
+                    </Button>
                   </div>
                 </ShoppingCart>
               </div>
