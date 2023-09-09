@@ -1,5 +1,4 @@
 import { useUser } from '@clerk/clerk-react'
-import { SchemaPage } from '../../data/Test'
 
 const HomeNotSignedIn = () => {
   return (
@@ -12,8 +11,7 @@ const HomeNotSignedIn = () => {
 
 const HomePage = () => {
   const { isLoaded, isSignedIn, user } = useUser()
-  const { data } = SchemaPage()
-  console.log(data)
+
   if (!isLoaded || !isSignedIn) {
     return <HomeNotSignedIn />
   }

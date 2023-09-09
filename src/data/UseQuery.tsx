@@ -11,7 +11,7 @@ export const useQuery = (query: string) => {
   const fetcher = async () => {
     const token = await getToken({ template: 'grafbase' })
     const results = await fetch(
-      'https://grafbase-store-pontusva.grafbase.app/graphql',
+      'http://127.0.0.1:4000/graphql',
       {
         method: 'POST',
         headers: {
