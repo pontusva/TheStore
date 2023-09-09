@@ -1,75 +1,73 @@
-import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { useBearStore } from '../../../store'
-import ShoppingCart from '../../../components/ShoppingCart'
-import { Button } from '@/components/ui/button'
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { useReducer } from "react";
+import { Button } from "@/components/ui/button";
+import { useItemStore, useTotalCost } from "@/store";
+import { useQuery } from "@/data/UseQuery";
+import ShoppingCart from "../../../components/ShoppingCart";
+import cartReducer from "./CartReducer";
 
-type Data = {
-  id: number
-  title: string
-  price: number
-  description: string
-  category: string
-  image: string
+export interface Data {
+  id: number;
+  title: string;
+  price: number;
+  description: string;
+  category: string;
+  image: string;
   rating: {
-    rate: number
-    count: number
-  }
+    rate: number;
+    count: number;
+  };
 }
 
 const SpecificCategory = () => {
-  const [data, setData] = useState<Data[] | null>(null)
-  const [shoppingItem, setShoppingItem] = useState<
-    number[]
-  >([])
-
-  const increaseBears = useBearStore(
-    (state) => state.increase
-  )
-  const addToCart = (item: number) => {
-    setShoppingItem((oldArray) => [...oldArray, item])
+  const [data, setData] = useState<Data[] | null>(null);
+  const [cart, setCart] = useReducer(cartReducer, []);
+  const { increase } = useItemStore();
+  const { increaseTotal, decreaseTotal } = useTotalCost();
+  const hello = useQuery("null");
+  console.log(hello);
+  function add(product: Data) {
+    const action = { product, type: "add" };
+    setCart(action);
   }
 
-  const removeFromCart = (item: number) => {
-    return setShoppingItem(
-      shoppingItem.filter(
-        (items, index) =>
-          shoppingItem.indexOf(item) !== index
-      )
-    )
-    // return arr.filter((item,
-    //   index) => arr.indexOf(item) === index);
-    // setShoppingItem(
-    //   shoppingItem?.splice(0, shoppingItem.indexOf(item))
-    // )
-    // return
+  function remove(product: Data) {
+    const action = { product, type: "remove" };
+    setCart(action);
   }
 
-  const disabled = (item: number) => {
-    return (
-      shoppingItem.some((i) => {
-        return i !== item
-      }) || shoppingItem.length === 0
-    )
-
-    // return
+  function getTotalSelectedAmountPerProduct(cart: Data[], productName: String) {
+    return cart.filter((item) => item.title === productName).length;
   }
 
-  const { category } = useParams()
+  function getTotal(cart: Data[]) {
+    const totalCoster = cart.reduce(
+      (totalCost, item) => totalCost + item.price,
+      0
+    );
+    increaseTotal(totalCoster);
+  }
+  function reduceTotal(cart: Data[]) {
+    const totalCoster = cart.reduce(
+      (totalCost, item) => totalCost + item.price,
+      0
+    );
+    decreaseTotal(totalCoster);
+  }
+
+  const { category } = useParams();
 
   useEffect(() => {
-    fetch(
-      'https://fakestoreapi.com/products/category/' +
-        category
-    )
+    fetch("https://fakestoreapi.com/products/category/" + category)
       .then((res) => res.json())
-      .then((json) => setData(json))
-  }, [category])
+      .then((json) => setData(json));
+  }, [category]);
 
   if (!data) {
-    return <p>Loading...</p>
+    return <p>Loading...</p>;
   }
-
+  console.log();
   return (
     <>
       <h1 className="text-center">{category}</h1>
@@ -78,37 +76,34 @@ const SpecificCategory = () => {
           <div key={index}>
             <h1>{item.title}</h1>
             <div className="flex">
-              <img
-                src={item.image}
-                className="w-36"
-                alt=""
-              />
+              <img src={item.image} className="w-36" alt="" />
               <div className="flex justify-center w-full items-center">
                 <ShoppingCart
                   isChild
-                  shoppingNumber={
-                    shoppingItem?.length as number
-                  }
-                  shoppingItem={shoppingItem}>
+                  shoppingNumber={cart?.length as number}
+                  shoppingItem={cart}
+                >
                   <div className="flex  flex-col">
                     <Button
                       onClick={() => {
-                        addToCart(item.id)
-                        increaseBears(1)
-                      }}>
+                        increase(1);
+                        add(item);
+                        getTotal([item]);
+                      }}
+                    >
                       Add to cart
                     </Button>
+                    <b>{getTotalSelectedAmountPerProduct(cart, item.title)}</b>
                     <Button
-                      disabled={disabled(item.id)}
+                      disabled={
+                        getTotalSelectedAmountPerProduct(cart, item.title) === 0
+                      }
                       onClick={() => {
-                        removeFromCart(item.id)
-                        shoppingItem.find((i) => {
-                          return (
-                            i === item.id &&
-                            increaseBears(-1)
-                          )
-                        })
-                      }}>
+                        remove(item);
+                        increase(-1);
+                        reduceTotal([item]);
+                      }}
+                    >
                       remove from cart
                     </Button>
                   </div>
@@ -116,10 +111,10 @@ const SpecificCategory = () => {
               </div>
             </div>
           </div>
-        )
+        );
       })}
     </>
-  )
-}
+  );
+};
 
-export default SpecificCategory
+export default SpecificCategory;

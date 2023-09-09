@@ -1,27 +1,19 @@
-import { useBearStore } from '../store'
+import { Data } from "@/pages/shop/shopComponents/SpecificCategory";
 
 type Props = {
-  shoppingItem?: number[]
-  shoppingNumber?: number
-  children?: React.ReactNode
-  isChild?: boolean
-  itemIndicator?: boolean
-}
+  shoppingItem?: Data[];
+  shoppingNumber?: number;
+  children?: React.ReactNode;
+  isChild?: boolean;
+  itemIndicator?: boolean;
+};
 
 const ShoppingCart = ({
   children,
-  shoppingItem,
-  itemIndicator,
-  isChild
-}: Props) => {
-  const bears = useBearStore((state) => state.bears)
-  console.log(shoppingItem)
-  return (
-    <div>
-      {itemIndicator && <p>{bears} items</p>}
-      {isChild && children}
-    </div>
-  )
-}
 
-export default ShoppingCart
+  isChild,
+}: Props) => {
+  return <div>{isChild && children}</div>;
+};
+
+export default ShoppingCart;

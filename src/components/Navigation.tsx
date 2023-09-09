@@ -1,41 +1,38 @@
-import MobileNavigation from './mobileNavigation/MobileNavigation'
-import DesktopNavigation from './desktopNavigation/DesktopNavigation'
-import { useState, useEffect } from 'react'
-import { useUser } from '@clerk/clerk-react'
+import MobileNavigation from "./mobileNavigation/MobileNavigation";
+import DesktopNavigation from "./desktopNavigation/DesktopNavigation";
+import { useState, useEffect } from "react";
+import { useUser } from "@clerk/clerk-react";
 
 const Navigation = () => {
-  const { isLoaded, isSignedIn } = useUser()
-  const menu = ['Home', 'Shop', 'History']
+  const { isLoaded, isSignedIn } = useUser();
+  const menu = ["Home", "Shop", "History", "Cart"];
 
   if (!isLoaded || !isSignedIn) {
-    menu.push('Register', 'Login')
+    menu.push("Register", "Login");
   }
   // used this article https://www.datainfinities.com/45/get-window-width-and-height-in-react
   // to get the window width and height
-  const [screenSize, setScreenSize] = useState(
-    getCurrentDimension()
-  )
+  const [screenSize, setScreenSize] = useState(getCurrentDimension());
 
-  const desktopNavigationBreakPoint =
-    screenSize.width <= 768
+  const desktopNavigationBreakPoint = screenSize.width <= 768;
 
   function getCurrentDimension() {
     return {
       width: window.innerWidth,
-      height: window.innerHeight
-    }
+      height: window.innerHeight,
+    };
   }
 
   useEffect(() => {
     const updateDimension = () => {
-      setScreenSize(getCurrentDimension())
-    }
-    window.addEventListener('resize', updateDimension)
+      setScreenSize(getCurrentDimension());
+    };
+    window.addEventListener("resize", updateDimension);
 
     return () => {
-      window.removeEventListener('resize', updateDimension)
-    }
-  }, [screenSize])
+      window.removeEventListener("resize", updateDimension);
+    };
+  }, [screenSize]);
 
   return desktopNavigationBreakPoint ? (
     <div>
@@ -43,7 +40,7 @@ const Navigation = () => {
     </div>
   ) : (
     <DesktopNavigation menu={menu} />
-  )
-}
+  );
+};
 
-export default Navigation
+export default Navigation;
