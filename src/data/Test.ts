@@ -1,19 +1,7 @@
-import { useQuery } from './UseQuery'
-import { Data } from '@/pages/shop/shopComponents/SpecificCategory'
-// $cart: [OrderLineCreateInput!]!
-// type Order @model {
-//   id: IDu
-//   title: String
-//   price: Int
-//   description: String
-//   category: String
-//   image: String
-//   rating: Rating
-// }
+import { UseQuery } from './UseQuery'
+import { UseMutation } from './UseMutation'
 
-export const SchemaPage = (cart: Data[]) => {
-  const yoo = cart[0]
-
+export const SchemaPage = () => {
   const YOUR_GRAPHQL_QUERY = `
     query Test {
       test(by: {id: "test_01H9XX4JVYAKMXC93J7HNTAMPH"}) {
@@ -22,12 +10,26 @@ export const SchemaPage = (cart: Data[]) => {
       }
     }
 `
-  const { data, error } = useQuery(YOUR_GRAPHQL_QUERY)
-  console.log(YOUR_GRAPHQL_QUERY)
+  const { data, error } = UseQuery(YOUR_GRAPHQL_QUERY)
+
   return {
     lol: data,
-    carte: cart,
-    yoo,
     error
   }
+}
+
+export const UseMutationMutation = (cart) => {
+  const { title, price, id } = cart
+  const mutation = `
+  mutation OrderItemCreate {
+    orderItemCreate(input: {${title}, ${price}, ${id}}}) {
+      orderItem {
+        title
+        price
+        id
+      }
+    }
+  }
+`
+  return UseMutation(mutation)
 }

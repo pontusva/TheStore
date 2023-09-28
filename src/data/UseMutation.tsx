@@ -1,7 +1,7 @@
 import { useAuth } from '@clerk/clerk-react'
-import useSWR from 'swr'
+import mutation from 'swr'
 
-export const UseQuery = (query: string) => {
+export const UseMutation = async (query: string) => {
   if (!query) {
     throw Error('No query provided to `useQuery`')
   }
@@ -23,5 +23,5 @@ export const UseQuery = (query: string) => {
     ).then((res) => res.json())
     return results
   }
-  return useSWR(query, fetcher)
+  return mutation(query, fetcher)
 }

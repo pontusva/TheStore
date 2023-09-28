@@ -4,6 +4,7 @@ import { useReducer } from 'react'
 import { Button } from '@/components/ui/button'
 import { useItemStore, useTotalCost } from '@/store'
 import { SchemaPage } from '@/data/Test'
+
 import ShoppingCart from '../../../components/ShoppingCart'
 
 import cartReducer from './CartReducer'
@@ -27,8 +28,9 @@ const SpecificCategory = () => {
   const { increase } = useItemStore()
   const { increaseTotal, decreaseTotal } = useTotalCost()
 
-  const lol = cart && SchemaPage(cart)
-  console.log(lol.lol.data.test)
+  const { lol } = SchemaPage()
+
+  useEffect(() => {}, [cart])
   function add(product: Data) {
     const action = { product, type: 'add' }
     setCart(action)
@@ -103,6 +105,8 @@ const SpecificCategory = () => {
                         increase(1)
                         add(item)
                         getTotal([item])
+
+                        console.log(lol)
                       }}>
                       Add to cart
                     </Button>
